@@ -6,44 +6,70 @@ defmodule DAY1 do
   """
 
   @doc """
+  Given a sequence of measurements, consider the sums of 'three-measurement'
+  sliding window. Count the number of times a window sum increases relative to
+  the previous sum.
+  """
+  def part2(list) do
+    part1(p2_map(list))
+  end
+
+  def p2_map([h1 | tail = [h2 | [h3 | _]]]) do
+    [h1 + h2 + h3 | p2_map(tail)]
+  end
+
+  def p2_map(_) do
+    []
+  end
+
+  @doc """
   Given a sequence of measurements, count the number of times a measurement
   increases from the previous measurement.
 
   ## Examples
 
-      iex> DAY1.count_increasing([1, 2, 3])
+      iex> DAY1.part1([1, 2, 3])
       2
-      iex> DAY1.count_increasing([3, 2, 1])
+      iex> DAY1.part1([3, 2, 1])
       0
   """
-  def count_increasing(list) do
-    reduce(list, 0)
+  def part1(list) do
+    p1_reduce(list, 0)
   end
 
-  def reduce([head | tail], {prev, acc}) do
+  def p1_reduce([head | tail], {prev, acc}) do
     if head > prev do
-      reduce(tail, {head, acc + 1})
+      p1_reduce(tail, {head, acc + 1})
     else
-      reduce(tail, {head, acc})
+      p1_reduce(tail, {head, acc})
     end
   end
 
-  def reduce([head | tail], acc) do
-    reduce(tail, {head, acc})
+  def p1_reduce([head | tail], acc) do
+    p1_reduce(tail, {head, acc})
   end
 
-  def reduce([], {_, acc}) do
+  def p1_reduce([], {_, acc}) do
     acc
   end
 
-  def reduce([], acc) do
+  def p1_reduce([], acc) do
     acc
   end
 
-  def run_day1(input_file) do
+  def run_part1(input_file) do
     {:ok, body} = File.read(input_file)
     input = Enum.map(String.split(body), fn x -> String.to_integer(x) end)
-    result = count_increasing(input)
+    result = part1(input)
+    IO.puts(result)
+
+    result
+  end
+
+  def run_part2(input_file) do
+    {:ok, body} = File.read(input_file)
+    input = Enum.map(String.split(body), fn x -> String.to_integer(x) end)
+    result = part2(input)
     IO.puts(result)
 
     result
