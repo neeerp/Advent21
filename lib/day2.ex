@@ -60,12 +60,16 @@ defmodule DAY2 do
   the end position and depth, using the part 2 control scheme.
   """
   def part2(commands) do
-    {pos, depth} = Enum.reduce(commands, {0, 0}, &p2_reduce/2)
+    {_, pos, depth} = Enum.reduce(commands, {0, 0, 0}, &p2_reduce/2)
     pos * depth
   end
 
-  defp p2_reduce({cmd, val}, {pos, depth}) do
-    {pos, depth}
+  defp p2_reduce({cmd, val}, {aim, pos, depth}) do
+    case cmd do
+      :forward -> {aim, pos + val, depth + (aim * val)}
+      :down -> {aim + val, pos, depth}
+      :up -> {aim - val, pos, depth}
+    end
   end
 
   @doc """
