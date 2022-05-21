@@ -31,10 +31,11 @@ defmodule DAY2 do
   end
 
   defp to_cmd({cmd, val}) do
+    val = String.to_integer(val)
     case cmd do
-      "forward" -> %{forward: val}
-      "down" -> %{down: val}
-      "up" -> %{up: val}
+      "forward" -> {:forward, val}
+      "down" -> {:down, val}
+      "up" -> {:up, val}
     end
   end
 
@@ -42,9 +43,16 @@ defmodule DAY2 do
   Takes a list of {command, magnitude} pairs and returns the product of
   the end position and depth.
   """
-  def part1(_commands) do
-    :not_implemented
+  def part1(commands) do
+    {pos, depth} = Enum.reduce(commands, {0, 0}, &reduce/2)
+    pos * depth
   end
 
-
+  defp reduce({cmd, val}, {pos, depth}) do
+    case cmd do
+      :forward -> {pos + val, depth}
+      :down -> {pos, depth + val}
+      :up -> {pos, depth - val}
+    end
+  end
 end
