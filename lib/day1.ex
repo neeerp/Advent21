@@ -5,7 +5,7 @@ defmodule DAY1 do
   get carried into deeper water by an ocean current or a fish or something.
   """
 
-  @input_file "day1.input"
+  @input_file "input/day1.input"
 
   def run_day1() do
     {:ok, body} = File.read(@input_file)
