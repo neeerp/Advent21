@@ -23,20 +23,29 @@ defmodule DAY3 do
   end
 
   def parse_body(body) do
-    Enum.map(String.split(body, "\n", trim: true), &to_bits/1)
+    Enum.map(String.split(body, "\n", trim: true), fn chrlist ->
+      Enum.map(String.codepoints(chrlist), &String.to_integer/1) end)
   end
 
-  def to_bits(binchar_str) do
-    Enum.reduce(String.codepoints(binchar_str), <<>>, fn chr, bits -> 
-      if chr == "1" do 
-        bits <> <<1>> 
-      else 
-        bits <> <<0>> 
-      end 
-    end)
+  # def to_bits(binchar_str) do
+  #   Enum.reduce(String.codepoints(binchar_str), <<>>, fn chr, bits -> 
+  #     if chr == "1" do 
+  #       bits <> <<1>> 
+  #     else 
+  #       bits <> <<0>> 
+  #     end 
+  #   end)
+  # end
+
+  def part1(bit_lists) do
+    sums = Enum.reduce(tl(bit_lists), hd(bit_lists), &p1_reduce/2)
+    gma = get_gamma(length(bit_lists), sums)
+    eps = compliment(gma)
+
+    Integer.undigits(gma, 2) * Integer.undigits(eps, 2)
   end
 
-  def part1(_bit_lists) do
-    :not_implemented
-  end
+  defp p1_reduce(cur, acc) do Enum.map(Enum.zip(cur, acc), fn {x, y} -> x + y end) end
+  defp get_gamma(n, sums) do Enum.map(sums, &(if &1 > n/2 do 1 else 0 end)) end
+  defp compliment(list) do Enum.map(list, &(1 - &1)) end
 end
